@@ -9,6 +9,11 @@ const projectSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   link: { type: String, default: '' },
+  category: {
+    type: String,
+    enum: ['Web Dev', 'Security', 'Systems', 'Other'],
+    default: 'Other',
+  },
 })
 
 const experienceSchema = new mongoose.Schema({

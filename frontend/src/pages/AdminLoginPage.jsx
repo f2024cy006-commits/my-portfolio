@@ -29,11 +29,12 @@ function AdminLoginPage() {
   }
 
   return (
-    <div className="login-shell">
-      <div className="login-card">
-        <Link to="/" className="login-back">← Back to portfolio</Link>
-        <div className="login-header">
-          <div className="login-icon">🔐</div>
+    <div className="admin-login-page">
+      <div className="admin-login-card">
+        <Link to="/" className="login-back-link">← Back to portfolio</Link>
+
+        <div className="login-header-block">
+          <div className="login-icon-badge">🔐</div>
           <h1>Admin Login</h1>
           <p>Enter your password to access the portfolio editor.</p>
         </div>
@@ -52,11 +53,9 @@ function AdminLoginPage() {
             />
           </div>
 
-          {isError && (
-            <div className="form-error">{message}</div>
-          )}
+          {isError && <div className="login-error">{message}</div>}
 
-          <button type="submit" className="button primary login-btn" disabled={isLoading}>
+          <button type="submit" className="login-submit-btn" disabled={isLoading}>
             {isLoading ? 'Verifying…' : 'Login'}
           </button>
         </form>

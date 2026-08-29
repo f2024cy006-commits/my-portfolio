@@ -12,6 +12,7 @@ const navItems = [
 
 function Layout({ children }) {
   const { data } = useSelector((state) => state.portfolio)
+  const { isAuthenticated } = useSelector((state) => state.auth)
   const name = data?.about?.name || 'Maarij Ur Rehman'
 
   return (
@@ -35,11 +36,13 @@ function Layout({ children }) {
               </NavLink>
             ))}
           </nav>
-          <div className="navbar-actions">
-            <Link to="/admin" className="admin-trigger" title="Admin dashboard">
-              <span className="trigger-icon">⚙</span>
-            </Link>
-          </div>
+          {isAuthenticated && (
+            <div className="navbar-actions">
+              <Link to="/admin" className="admin-trigger" title="Admin dashboard">
+                <span className="trigger-icon">⚙</span>
+              </Link>
+            </div>
+          )}
         </div>
       </header>
 
@@ -52,9 +55,11 @@ function Layout({ children }) {
       <footer className="footer-container">
         <div className="footer-content">
           <p>© {new Date().getFullYear()} {name}. Built with security and modern aesthetics.</p>
-          <div className="footer-links">
-            <Link to="/admin/login" className="footer-admin-link">Admin Portal</Link>
-          </div>
+          {isAuthenticated && (
+            <div className="footer-links">
+              <Link to="/admin" className="footer-admin-link">Admin Dashboard</Link>
+            </div>
+          )}
         </div>
       </footer>
     </div>

@@ -9,22 +9,53 @@ function ProjectsPage() {
 
   const { projects } = data
 
-  // Categorize dynamically based on title/description keywords
+  const categories = ['All', 'Web Dev', 'Security', 'Systems', 'Other']
+
   const getCategory = (proj) => {
+    if (proj.category && categories.includes(proj.category)) {
+      return proj.category
+    }
+
     const text = `${proj.title} ${proj.description}`.toLowerCase()
-    if (text.includes('security') || text.includes('encrypt') || text.includes('cryptography')) {
+
+    if (
+      text.includes('security') ||
+      text.includes('encrypt') ||
+      text.includes('encrypted') ||
+      text.includes('cryptography') ||
+      text.includes('secure file') ||
+      text.includes('secure data')
+    ) {
       return 'Security'
     }
-    if (text.includes('mern') || text.includes('commerce') || text.includes('web') || text.includes('full-stack')) {
+
+    if (
+      text.includes('mern') ||
+      text.includes('commerce') ||
+      text.includes('e-commerce') ||
+      text.includes('web') ||
+      text.includes('full-stack') ||
+      text.includes('frontend') ||
+      text.includes('react') ||
+      text.includes('node') ||
+      text.includes('express') ||
+      text.includes('dashboard')
+    ) {
       return 'Web Dev'
     }
-    if (text.includes('c++') || text.includes('oop') || text.includes('console') || text.includes('cloud')) {
+
+    if (
+      text.includes('c++') ||
+      text.includes('oop') ||
+      text.includes('console') ||
+      text.includes('cloud') ||
+      text.includes('system')
+    ) {
       return 'Systems'
     }
+
     return 'Other'
   }
-
-  const categories = ['All', 'Web Dev', 'Security', 'Systems']
 
   const filteredProjects = projects?.filter((proj) => {
     if (filter === 'All') return true

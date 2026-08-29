@@ -52,30 +52,35 @@ const seedData = {
       description:
         'Developed a full-stack web application for virtual testing and security assessment of digital assets using the MERN stack. Implemented secure authentication, role-based access, and interactive dashboards for managing and analyzing asset security.',
       link: '',
+      category: 'Web Dev',
     },
     {
       title: 'E-Commerce Website',
       description:
         'Developed a complete online shopping platform with secure user authentication and encrypted data handling features. Designed intuitive UI elements and followed web security best practices for safe user transactions.',
       link: '',
+      category: 'Web Dev',
     },
     {
       title: 'Cloud Management System (OOP-based Project)',
       description:
         'Built a cloud resource management system using C++ and OOP principles. Focused on modular structure, access control, and scalability for multi-user environment.',
       link: '',
+      category: 'Systems',
     },
     {
       title: 'Secure Encrypted Data Storage (Database Project)',
       description:
         'Implemented a secure database for storing sensitive user data using encryption and role-based access control, ensuring confidentiality and integrity.',
       link: '',
+      category: 'Security',
     },
     {
       title: 'Secure File Sharing System (Console-based)',
       description:
         'Developed a console-based file sharing system emphasizing encrypted communication and controlled access for secure data transfer.',
       link: '',
+      category: 'Security',
     },
   ],
   experience: [

@@ -158,7 +158,7 @@ function ProjectsEditor({ data, onChange }) {
   const updateItem = (idx, field, val) => {
     onChange(data.map((p, i) => (i === idx ? { ...p, [field]: val } : p)))
   }
-  const addItem = () => onChange([...data, { title: '', description: '', link: '' }])
+  const addItem = () => onChange([...data, { title: '', description: '', link: '', category: 'Web Dev' }])
   const removeItem = (idx) => onChange(data.filter((_, i) => i !== idx))
   const moveUp = (idx) => {
     if (idx === 0) return
@@ -199,6 +199,19 @@ function ProjectsEditor({ data, onChange }) {
               value={project.description}
               onChange={(e) => updateItem(idx, 'description', e.target.value)}
             />
+          </div>
+          <div className="form-group">
+            <label>Category</label>
+            <select
+              className="admin-select"
+              value={project.category || 'Other'}
+              onChange={(e) => updateItem(idx, 'category', e.target.value)}
+            >
+              <option value="Web Dev">Web Dev</option>
+              <option value="Security">Security</option>
+              <option value="Systems">Systems</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
           <div className="form-group">
             <label>Project Link (optional)</label>
