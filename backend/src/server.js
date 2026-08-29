@@ -1,7 +1,7 @@
 const app = require('./app')
 const connectDB = require('./config/db')
 
-const preferredPort = Number(process.env.PORT) || 5003
+const preferredPort = Number(process.env.PORT) || 5002
 
 const startServer = async () => {
   try {

@@ -3,7 +3,6 @@ import portfolioService from './portfolioService'
 
 const initialState = {
   data: null,      // full portfolio document from MongoDB
-  health: null,
   isLoading: false,
   isSaving: false,
   isError: false,
@@ -32,19 +31,6 @@ export const updatePortfolio = createAsyncThunk(
       return await portfolioService.updatePortfolio(sectionData, token)
     } catch (error) {
       const message = error.response?.data?.message || error.message || 'Update failed'
-      return thunkAPI.rejectWithValue(message)
-    }
-  },
-)
-
-// Legacy health check
-export const checkHealth = createAsyncThunk(
-  'portfolio/checkHealth',
-  async (_, thunkAPI) => {
-    try {
-      return await portfolioService.getHealth()
-    } catch (error) {
-      const message = error.response?.data?.message || error.message || 'Server unavailable'
       return thunkAPI.rejectWithValue(message)
     }
   },
@@ -89,10 +75,6 @@ const portfolioSlice = createSlice({
         state.isSaving = false
         state.isError = true
         state.message = action.payload
-      })
-      // checkHealth
-      .addCase(checkHealth.fulfilled, (state, action) => {
-        state.health = action.payload
       })
   },
 })
