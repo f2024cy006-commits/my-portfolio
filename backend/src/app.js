@@ -17,9 +17,11 @@ app.use(express.json())
 // Routes
 const authRoutes = require('./routes/authRoutes')
 const portfolioRoutes = require('./routes/portfolioRoutes')
+const contactRoutes = require('./routes/contactRoutes')
 
 app.use('/api/auth', authRoutes)
 app.use('/api/portfolio', portfolioRoutes)
+app.use('/api/contact', contactRoutes)
 
 // Health check
 app.get('/api/health', (req, res) => {

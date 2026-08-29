@@ -1,12 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios'
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
+import { BsPerson, BsBarChart, BsTools, BsRocket, BsBriefcase, BsEnvelope, BsChat, BsShield } from 'react-icons/bs'
+import { MdSchool } from 'react-icons/md'
 import { logout } from '../features/auth/authSlice'
+import authService from '../features/auth/authService'
 import { fetchPortfolio, updatePortfolio, resetPortfolioState } from '../features/portfolio/portfolioSlice'
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function SaveBar({ isSaving, isError, message, onSave, onReset }) {
+function SaveBar({ isSaving, isError, message, onSave }) {
   return (
     <div className="save-bar">
       {isError && <span className="save-error">{message}</span>}
@@ -14,7 +19,6 @@ function SaveBar({ isSaving, isError, message, onSave, onReset }) {
         <span className="save-success">✓ {message}</span>
       )}
       <div className="save-bar-actions">
-        <button className="btn-ghost" onClick={onReset} disabled={isSaving}>Reset</button>
         <button className="button primary btn-save" onClick={onSave} disabled={isSaving}>
           {isSaving ? 'Saving…' : 'Save Changes'}
         </button>
@@ -132,14 +136,22 @@ function SkillsEditor({ data, onChange }) {
     <div className="editor-section">
       <div className="form-group">
         <label>Add a Skill</label>
-        <div className="form-group-row">
+        <div className="input-with-action">
           <input
             placeholder="e.g. React, Node.js, Cybersecurity…"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
           />
-          <button className="btn-add-inline" onClick={addSkill}>Add</button>
+          <button
+            type="button"
+            className="input-action-btn"
+            onClick={addSkill}
+            aria-label="Add skill"
+            title="Add skill"
+          >
+            →
+          </button>
         </div>
       </div>
       <div className="skills-list skills-list-edit">
@@ -334,16 +346,231 @@ function ContactEditor({ data, onChange }) {
   )
 }
 
+// ─── Contact Messages Viewer ──────────────────────────────────────────────────
+
+function ContactMessagesViewer() {
+  const [messages, setMessages] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const { token } = useSelector((state) => state.auth)
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        setIsLoading(true)
+        setError(null)
+        const response = await axios.get('/api/contact', {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        setMessages(response.data.data || [])
+      } catch (err) {
+        console.error('Failed to fetch contact messages:', err)
+        setError(err.response?.data?.message || 'Unable to load messages.')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    if (token) {
+      fetchMessages()
+    }
+  }, [token])
+
+  if (isLoading) {
+    return (
+      <div className="editor-section">
+        <div className="loading-spinner" style={{ margin: '2rem 0' }} />
+        <p>Loading messages…</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="editor-section">
+        <div className="login-error">{error}</div>
+      </div>
+    )
+  }
+
+  if (messages.length === 0) {
+    return (
+      <div className="editor-section">
+        <p className="muted" style={{ textAlign: 'center', padding: '2rem' }}>
+          No contact messages yet. Check back when someone reaches out!
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="editor-section messages-viewer">
+      <div className="messages-list">
+        {messages.map((msg) => (
+          <div key={msg._id} className="message-card">
+            <div className="message-header">
+              <div>
+                <strong className="message-name">{msg.name}</strong>
+                <span className="message-email">{msg.email}</span>
+              </div>
+              <span className="message-date">
+                {new Date(msg.createdAt).toLocaleDateString()} at {new Date(msg.createdAt).toLocaleTimeString()}
+              </span>
+            </div>
+            <div className="message-body">
+              <p>{msg.message}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function SecurityEditor() {
+  const { token, email } = useSelector((state) => state.auth)
+  const [form, setForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' })
+  const [status, setStatus] = useState({ type: '', message: '' })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showPasswords, setShowPasswords] = useState({ current: false, new: false, confirm: false })
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    if (!form.currentPassword || !form.newPassword || !form.confirmPassword) {
+      setStatus({ type: 'error', message: 'All password fields are required.' })
+      return
+    }
+
+    if (form.newPassword !== form.confirmPassword) {
+      setStatus({ type: 'error', message: 'New password and confirm password do not match.' })
+      return
+    }
+
+    if (form.newPassword.length < 6) {
+      setStatus({ type: 'error', message: 'New password must be at least 6 characters long.' })
+      return
+    }
+
+    try {
+      setIsSubmitting(true)
+      setStatus({ type: '', message: '' })
+
+      const response = await authService.changePassword({
+        token,
+        currentPassword: form.currentPassword,
+        newPassword: form.newPassword,
+      })
+
+      setStatus({ type: 'success', message: response.message || 'Password updated successfully.' })
+      setForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
+    } catch (error) {
+      const message = error.response?.data?.message || 'Unable to update password.'
+      setStatus({ type: 'error', message })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="editor-section security-editor">
+      <div className="security-card">
+        <div className="security-header">
+          <h3>Admin Security</h3>
+          <span>{email}</span>
+        </div>
+
+        <form onSubmit={handleSubmit} className="security-form">
+          <div className="form-group password-input-group">
+            <label htmlFor="currentPassword">Current Password</label>
+            <div className="password-input-wrapper">
+              <input
+                id="currentPassword"
+                type={showPasswords.current ? 'text' : 'password'}
+                value={form.currentPassword}
+                onChange={(e) => setForm((prev) => ({ ...prev, currentPassword: e.target.value }))}
+                placeholder="Enter current password"
+              />
+              <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShowPasswords((prev) => ({ ...prev, current: !prev.current }))}
+                aria-label={showPasswords.current ? 'Hide password' : 'Show password'}
+              >
+                {showPasswords.current ? <AiOutlineEyeInvisible size={18} /> : <AiOutlineEye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          <div className="form-group password-input-group">
+            <label htmlFor="newPassword">New Password</label>
+            <div className="password-input-wrapper">
+              <input
+                id="newPassword"
+                type={showPasswords.new ? 'text' : 'password'}
+                value={form.newPassword}
+                onChange={(e) => setForm((prev) => ({ ...prev, newPassword: e.target.value }))}
+                placeholder="Enter new password"
+              />
+              <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShowPasswords((prev) => ({ ...prev, new: !prev.new }))}
+                aria-label={showPasswords.new ? 'Hide password' : 'Show password'}
+              >
+                {showPasswords.new ? <AiOutlineEyeInvisible size={18} /> : <AiOutlineEye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          <div className="form-group password-input-group">
+            <label htmlFor="confirmPassword">Confirm New Password</label>
+            <div className="password-input-wrapper">
+              <input
+                id="confirmPassword"
+                type={showPasswords.confirm ? 'text' : 'password'}
+                value={form.confirmPassword}
+                onChange={(e) => setForm((prev) => ({ ...prev, confirmPassword: e.target.value }))}
+                placeholder="Confirm new password"
+              />
+              <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShowPasswords((prev) => ({ ...prev, confirm: !prev.confirm }))}
+                aria-label={showPasswords.confirm ? 'Hide password' : 'Show password'}
+              >
+                {showPasswords.confirm ? <AiOutlineEyeInvisible size={18} /> : <AiOutlineEye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          {status.message && (
+            <div className={status.type === 'error' ? 'login-error' : 'save-success'}>
+              {status.message}
+            </div>
+          )}
+
+          <button type="submit" className="button primary btn-save" disabled={isSubmitting}>
+            {isSubmitting ? 'Updating…' : 'Update Password'}
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 // ─── Tab config ───────────────────────────────────────────────────────────────
 
 const TABS = [
-  { id: 'about', label: '👤 About' },
-  { id: 'stats', label: '📊 Stats' },
-  { id: 'skills', label: '🛠 Skills' },
-  { id: 'projects', label: '🚀 Projects' },
-  { id: 'experience', label: '💼 Experience' },
-  { id: 'education', label: '🎓 Education' },
-  { id: 'contact', label: '📬 Contact' },
+  { id: 'about', label: 'About', icon: BsPerson },
+  { id: 'stats', label: 'Stats', icon: BsBarChart },
+  { id: 'skills', label: 'Skills', icon: BsTools },
+  { id: 'projects', label: 'Projects', icon: BsRocket },
+  { id: 'experience', label: 'Experience', icon: BsBriefcase },
+  { id: 'education', label: 'Education', icon: MdSchool },
+  { id: 'contact', label: 'Contact', icon: BsEnvelope },
+  { id: 'messages', label: 'Messages', icon: BsChat },
+  { id: 'security', label: 'Security', icon: BsShield },
 ]
 
 // ─── Main admin page ──────────────────────────────────────────────────────────
@@ -376,11 +603,6 @@ function AdminPage() {
     dispatch(updatePortfolio(draft))
   }
 
-  const handleReset = () => {
-    if (data) setDraft(JSON.parse(JSON.stringify(data)))
-    dispatch(resetPortfolioState())
-  }
-
   if (isLoading || !draft) {
     return (
       <div className="loading-screen">
@@ -411,15 +633,20 @@ function AdminPage() {
         <aside className="admin-sidebar">
           <p className="sidebar-label">Sections</p>
           <nav>
-            {TABS.map((tab) => (
-              <button
-                key={tab.id}
-                className={`sidebar-tab ${activeTab === tab.id ? 'active' : ''}`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                {tab.label}
-              </button>
-            ))}
+            {TABS.map((tab) => {
+              const IconComponent = tab.icon
+              return (
+                <button
+                  key={tab.id}
+                  className={`sidebar-tab ${activeTab === tab.id ? 'active' : ''}`}
+                  onClick={() => setActiveTab(tab.id)}
+                  title={tab.label}
+                >
+                  <IconComponent size={18} />
+                  <span>{tab.label}</span>
+                </button>
+              )
+            })}
           </nav>
           <div className="sidebar-footer">
             <SaveBar
@@ -427,7 +654,6 @@ function AdminPage() {
               isError={isError}
               message={message}
               onSave={handleSave}
-              onReset={handleReset}
             />
           </div>
         </aside>
@@ -435,7 +661,18 @@ function AdminPage() {
         {/* Content area */}
         <main className="admin-content">
           <div className="admin-section-header">
-            <h2>{TABS.find((t) => t.id === activeTab)?.label}</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              {(() => {
+                const currentTab = TABS.find((t) => t.id === activeTab)
+                const IconComponent = currentTab?.icon
+                return (
+                  <>
+                    {IconComponent && <IconComponent size={24} />}
+                    <h2>{currentTab?.label}</h2>
+                  </>
+                )
+              })()}
+            </div>
             <a href="/" target="_blank" rel="noreferrer" className="preview-link">
               Preview live site →
             </a>
@@ -462,6 +699,8 @@ function AdminPage() {
           {activeTab === 'contact' && (
             <ContactEditor data={draft.contact} onChange={updateSection('contact')} />
           )}
+          {activeTab === 'messages' && <ContactMessagesViewer />}
+          {activeTab === 'security' && <SecurityEditor />}
         </main>
       </div>
     </div>

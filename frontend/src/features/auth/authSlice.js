@@ -6,6 +6,7 @@ const token = localStorage.getItem('adminToken') || null
 
 const initialState = {
   token,
+  email: null,
   isAuthenticated: !!token,
   isLoading: false,
   isError: false,
@@ -14,13 +15,13 @@ const initialState = {
 
 export const login = createAsyncThunk(
   'auth/login',
-  async (password, thunkAPI) => {
+  async ({ email, password }, thunkAPI) => {
     try {
-      const data = await authService.login(password)
+      const data = await authService.login({ email, password })
       localStorage.setItem('adminToken', data.token)
-      return data.token
+      return { token: data.token, email: data.email }
     } catch (error) {
-      const message = error.response?.data?.message || 'Invalid password'
+      const message = error.response?.data?.message || 'Invalid email or password'
       return thunkAPI.rejectWithValue(message)
     }
   },
@@ -33,6 +34,7 @@ const authSlice = createSlice({
     logout: (state) => {
       localStorage.removeItem('adminToken')
       state.token = null
+      state.email = null
       state.isAuthenticated = false
       state.message = ''
       state.isError = false
@@ -52,13 +54,15 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false
         state.isAuthenticated = true
-        state.token = action.payload
+        state.token = action.payload.token
+        state.email = action.payload.email
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload
         state.token = null
+        state.email = null
         state.isAuthenticated = false
       })
   },

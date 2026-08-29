@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux'
+import { MdSchool } from 'react-icons/md'
 
 function EducationPage() {
   const { data } = useSelector((state) => state.portfolio)
@@ -23,7 +24,9 @@ function EducationPage() {
             <div className="edu-card-glow"></div>
             <div className="edu-card-header">
               <div className="edu-institution-info">
-                <span className="edu-icon-shield">🎓</span>
+                <span className="edu-icon-shield">
+                  <MdSchool size={24} />
+                </span>
                 <div>
                   <h3 className="edu-institution-name">{edu.institution}</h3>
                   <p className="edu-degree-title">{edu.degree}</p>

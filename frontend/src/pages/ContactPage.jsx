@@ -1,11 +1,15 @@
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { BiSolidErrorCircle } from 'react-icons/bi'
+import { MdMail, MdPhone } from 'react-icons/md'
+import { RiLinkedinFill, RiGithubFill } from 'react-icons/ri'
+import axios from 'axios'
 
 function ContactPage() {
   const { data } = useSelector((state) => state.portfolio)
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [copiedField, setCopiedField] = useState(null)
-  const [submitStatus, setSubmitStatus] = useState(null) // null, 'sending', 'success'
+  const [submitStatus, setSubmitStatus] = useState(null) // null, 'sending', 'success', 'error'
 
   if (!data) return null
 
@@ -17,16 +21,26 @@ function ContactPage() {
     setTimeout(() => setCopiedField(null), 2000)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (!formData.name || !formData.email || !formData.message) return
 
     setSubmitStatus('sending')
-    setTimeout(() => {
+
+    try {
+      await axios.post('/api/contact', {
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+      })
+
       setSubmitStatus('success')
       setFormData({ name: '', email: '', message: '' })
       setTimeout(() => setSubmitStatus(null), 4000)
-    }, 1500)
+    } catch (error) {
+      setSubmitStatus('error')
+      setTimeout(() => setSubmitStatus(null), 4000)
+    }
   }
 
   return (
@@ -48,7 +62,9 @@ function ContactPage() {
             {contact?.email && (
               <div className="channel-interactive-card">
                 <div className="channel-info">
-                  <span className="channel-icon">📧</span>
+                  <span className="channel-icon">
+                    <MdMail size={20} />
+                  </span>
                   <div>
                     <span className="channel-label">Email Address</span>
                     <a href={`mailto:${contact.email}`} className="channel-value-link">{contact.email}</a>
@@ -66,7 +82,9 @@ function ContactPage() {
             {contact?.phone && (
               <div className="channel-interactive-card">
                 <div className="channel-info">
-                  <span className="channel-icon">📞</span>
+                  <span className="channel-icon">
+                    <MdPhone size={20} />
+                  </span>
                   <div>
                     <span className="channel-label">Phone Line</span>
                     <a href={`tel:${contact.phone.replace(/\s/g, '')}`} className="channel-value-link">{contact.phone}</a>
@@ -91,7 +109,9 @@ function ContactPage() {
                 rel="noreferrer"
                 className="profile-link-tile linkedin-tile"
               >
-                <span className="tile-icon">🔗</span>
+                <span className="tile-icon">
+                  <RiLinkedinFill size={24} />
+                </span>
                 <span className="tile-title">LinkedIn</span>
                 <span className="tile-sub">Connect with me</span>
               </a>
@@ -104,7 +124,9 @@ function ContactPage() {
                 rel="noreferrer"
                 className="profile-link-tile github-tile"
               >
-                <span className="tile-icon">💻</span>
+                <span className="tile-icon">
+                  <RiGithubFill size={24} />
+                </span>
                 <span className="tile-title">GitHub</span>
                 <span className="tile-sub">View repositories</span>
               </a>
@@ -155,6 +177,13 @@ function ContactPage() {
             {submitStatus === 'success' && (
               <div className="form-submit-notification success">
                 ✓ Thank you! Your message was sent successfully.
+              </div>
+            )}
+
+            {submitStatus === 'error' && (
+              <div className="form-submit-notification error">
+                <BiSolidErrorCircle size={18} style={{ display: 'inline-block', marginRight: '8px' }} />
+                Unable to send your message right now. Please try again.
               </div>
             )}
 

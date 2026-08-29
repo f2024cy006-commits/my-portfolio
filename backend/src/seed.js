@@ -6,7 +6,9 @@
 
 require('dotenv').config()
 const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
 const Portfolio = require('./models/Portfolio')
+const Admin = require('./models/Admin')
 
 const seedData = {
   about: {
@@ -127,6 +129,22 @@ async function seed() {
     } else {
       await Portfolio.create(seedData)
       console.log('✓ Portfolio seeded successfully!')
+    }
+
+    const adminEmail = (process.env.ADMIN_EMAIL || 'maarijrana162@gmail.com').trim().toLowerCase()
+    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'
+    const existingAdmin = await Admin.findOne({ email: adminEmail })
+
+    if (!existingAdmin) {
+      const passwordHash = await bcrypt.hash(adminPassword, 10)
+      await Admin.create({
+        email: adminEmail,
+        passwordHash,
+        name: 'Maarij Ur Rehman',
+      })
+      console.log(`✓ Admin seeded for ${adminEmail}`)
+    } else {
+      console.log(`Admin already exists for ${adminEmail}`)
     }
   } catch (error) {
     console.error('Seed error:', error.message)

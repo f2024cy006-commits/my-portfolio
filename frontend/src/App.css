@@ -62,6 +62,13 @@ body {
 .error-shield {
   font-size: 3rem;
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+.error-shield svg {
+  color: #ef4444;
 }
 .error-screen h2 {
   font-size: 1.8rem;
@@ -951,13 +958,20 @@ body {
 }
 
 .edu-icon-shield {
-  font-size: 1.75rem;
-  padding: 10px;
+  width: 44px;
+  height: 44px;
+  padding: 8px;
   background: rgba(6, 182, 212, 0.08);
   border-radius: 12px;
   border: 1px solid rgba(6, 182, 212, 0.15);
   display: grid;
   place-items: center;
+  flex-shrink: 0;
+}
+.edu-icon-shield svg {
+  width: 24px;
+  height: 24px;
+  color: var(--accent-cyan);
 }
 
 .edu-institution-name {
@@ -1062,7 +1076,6 @@ body {
 }
 
 .channel-icon {
-  font-size: 1.5rem;
   width: 40px;
   height: 40px;
   background: rgba(255, 255, 255, 0.03);
@@ -1070,6 +1083,12 @@ body {
   display: grid;
   place-items: center;
   border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+.channel-icon svg {
+  width: 20px;
+  height: 20px;
+  color: var(--accent-color);
 }
 
 .channel-label {
@@ -1143,8 +1162,20 @@ body {
 }
 
 .tile-icon {
-  font-size: 1.5rem;
-  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border-radius: 12px;
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+.tile-icon svg {
+  width: 24px;
+  height: 24px;
+  color: var(--accent-color);
 }
 
 .tile-title {
@@ -1394,6 +1425,10 @@ body {
   transition: all 0.18s;
   width: 100%;
 }
+.sidebar-tab svg {
+  flex-shrink: 0;
+  color: currentColor;
+}
 .sidebar-tab:hover {
   background: rgba(255,255,255,0.04);
   color: var(--text-primary);
@@ -1404,6 +1439,9 @@ body {
   font-weight: 700;
   border-left: 3px solid var(--accent-color);
   padding-left: 11px;
+}
+.sidebar-tab.active svg {
+  color: var(--accent-color);
 }
 
 .sidebar-footer {
@@ -1416,10 +1454,15 @@ body {
 .save-bar {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 10px;
+  width: 100%;
 }
 .save-bar-actions {
   display: flex;
+  justify-content: center;
+  width: 100%;
   gap: 8px;
 }
 .save-success {
@@ -1431,6 +1474,46 @@ body {
   font-size: 0.82rem;
   color: #f87171;
   font-weight: 500;
+}
+
+.security-editor {
+  max-width: 560px;
+}
+
+.security-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+}
+
+.security-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.security-header h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.security-header span {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  word-break: break-word;
+}
+
+.security-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 /* ─── Admin Content Area ─── */
@@ -1447,6 +1530,15 @@ body {
   margin-bottom: 28px;
   padding-bottom: 20px;
   border-bottom: 1px solid var(--border-color);
+}
+.admin-section-header > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.admin-section-header > div svg {
+  color: var(--accent-color);
+  flex-shrink: 0;
 }
 .admin-section-header h2 {
   font-size: 1.4rem;
@@ -1528,6 +1620,43 @@ body {
 }
 .form-group-row input {
   flex: 1;
+}
+
+.input-with-action {
+  position: relative;
+  width: 100%;
+}
+
+.input-with-action input {
+  padding-right: 46px;
+  width: 100%;
+}
+
+.input-action-btn {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(6, 182, 212, 0.18));
+  color: var(--text-primary);
+  font-size: 1.05rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.08);
+}
+
+.input-action-btn:hover {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.28), rgba(6, 182, 212, 0.22));
+  border-color: rgba(139, 92, 246, 0.6);
+  transform: translateY(-50%) scale(1.02);
 }
 
 /* ─── Admin Select ─── */
@@ -1785,6 +1914,128 @@ body {
   display: flex;
   flex-direction: column;
   gap: 18px;
+}
+
+/* ─── Messages Viewer ─── */
+.messages-viewer {
+  max-width: 900px;
+}
+
+.messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.message-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s;
+  overflow: hidden;
+}
+
+.message-card:hover {
+  border-color: rgba(139, 92, 246, 0.35);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+}
+
+.message-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.message-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.message-name {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.message-email {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.message-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.message-body {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.message-body p {
+  margin: 0;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+/* ─── Password Input with Toggle ─── */
+.password-input-group {
+  position: relative;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  border-radius: 6px;
+}
+.password-toggle-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+.password-toggle-btn:hover {
+  color: var(--accent-color);
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.password-toggle-btn:active {
+  transform: translateY(-50%) scale(0.95);
 }
 
 .login-form .form-group {

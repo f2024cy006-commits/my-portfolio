@@ -37,10 +37,12 @@ function PublicLayoutWrapper() {
   if (isError) {
     return (
       <div className="error-screen">
-        <div className="error-shield">⚠️</div>
+        <div className="error-shield">
+          <BiSolidError size={48} />
+        </div>
         <h2>Connection Timeout</h2>
         <p>{message}</p>
-        <p className="muted">Please verify the backend microservice is active on port 5002.</p>
+        <p className="muted">Please verify the backend microservice is active (default: port 5002, or next available port).</p>
         <button onClick={() => dispatch(fetchPortfolio())} className="btn-modern primary-btn error-retry-btn">
           Retry Sync
         </button>
