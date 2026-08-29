@@ -87,18 +87,27 @@ function StatsEditor({ data, onChange }) {
   return (
     <div className="editor-section">
       {data.map((stat, idx) => (
-        <div key={idx} className="list-item-row">
-          <input
-            placeholder="Value (e.g. 3+)"
-            value={stat.value}
-            onChange={(e) => updateItem(idx, 'value', e.target.value)}
-          />
-          <input
-            placeholder="Label (e.g. Years of experience)"
-            value={stat.label}
-            onChange={(e) => updateItem(idx, 'label', e.target.value)}
-          />
-          <button className="btn-remove" onClick={() => removeItem(idx)}>✕</button>
+        <div key={idx} className="card-editor">
+          <div className="card-editor-header">
+            <strong>{stat.label || `Stat ${idx + 1}`}</strong>
+            <button className="btn-remove" onClick={() => removeItem(idx)}>✕</button>
+          </div>
+          <div className="form-group">
+            <label>Value (e.g. 3+, 100%)</label>
+            <input
+              placeholder="e.g. 3+"
+              value={stat.value}
+              onChange={(e) => updateItem(idx, 'value', e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label>Label</label>
+            <input
+              placeholder="e.g. Years of experience"
+              value={stat.label}
+              onChange={(e) => updateItem(idx, 'label', e.target.value)}
+            />
+          </div>
         </div>
       ))}
       <button className="btn-add" onClick={addItem}>+ Add Stat</button>
@@ -121,14 +130,17 @@ function SkillsEditor({ data, onChange }) {
 
   return (
     <div className="editor-section">
-      <div className="form-group form-group-row">
-        <input
-          placeholder="Add a skill…"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
-        />
-        <button className="btn-add-inline" onClick={addSkill}>Add</button>
+      <div className="form-group">
+        <label>Add a Skill</label>
+        <div className="form-group-row">
+          <input
+            placeholder="e.g. React, Node.js, Cybersecurity…"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
+          />
+          <button className="btn-add-inline" onClick={addSkill}>Add</button>
+        </div>
       </div>
       <div className="skills-list skills-list-edit">
         {data.map((skill) => (
