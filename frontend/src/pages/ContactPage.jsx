@@ -5,8 +5,6 @@ import { MdMail, MdPhone } from 'react-icons/md'
 import { RiLinkedinFill, RiGithubFill } from 'react-icons/ri'
 import axios from 'axios'
 
-const API_BASE = import.meta.env.VITE_API_URL || ''
-
 function ContactPage() {
   const { data } = useSelector((state) => state.portfolio)
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
@@ -30,7 +28,7 @@ function ContactPage() {
     setSubmitStatus('sending')
 
     try {
-      await axios.post(`${API_BASE}/api/contact`, {
+      await axios.post('/api/contact', {
         name: formData.name,
         email: formData.email,
         message: formData.message,

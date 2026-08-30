@@ -9,8 +9,6 @@ import { logout } from '../features/auth/authSlice'
 import authService from '../features/auth/authService'
 import { fetchPortfolio, updatePortfolio, resetPortfolioState } from '../features/portfolio/portfolioSlice'
 
-const API_BASE = import.meta.env.VITE_API_URL || ''
-
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 function SaveBar({ isSaving, isError, message, onSave }) {
@@ -361,7 +359,7 @@ function ContactMessagesViewer() {
       try {
         setIsLoading(true)
         setError(null)
-        const response = await axios.get(`${API_BASE}/api/contact`, {
+        const response = await axios.get('/api/contact', {
           headers: { Authorization: `Bearer ${token}` },
         })
         setMessages(response.data.data || [])
