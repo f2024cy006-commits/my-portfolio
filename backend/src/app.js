@@ -6,9 +6,23 @@ dotenv.config()
 
 const app = express()
 
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'https://www.maarijurrehman.dev',
+  'https://maarijurrehman.dev',
+  'http://localhost:5173',
+  'http://localhost:3000',
+].filter(Boolean)
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true)
+      }
+
+      callback(new Error(`CORS not allowed for origin: ${origin}`))
+    },
     credentials: true,
   }),
 )
