@@ -10,7 +10,6 @@ const allowedOrigins = [
   process.env.CLIENT_URL,
   'https://www.maarijurrehman.dev',
   'https://maarijurrehman.dev',
-  'https://my-portfolio-smoky-iota-fd2kvkh8k4.vercel.app',
   'http://localhost:5173',
   'http://localhost:3000',
 ].filter(Boolean)

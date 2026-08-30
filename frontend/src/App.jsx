@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { HashRouter, Routes, Route, Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { BiSolidError } from 'react-icons/bi'
 import { fetchPortfolio } from './features/portfolio/portfolioSlice'
 import './App.css'
 
