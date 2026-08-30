@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
+import { HashRouter, Routes, Route, Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchPortfolio } from './features/portfolio/portfolioSlice'
 import './App.css'
@@ -61,7 +61,7 @@ function PublicLayoutWrapper() {
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         {/* Public Portfolio Sub-routes wrapped in Layout */}
         <Route element={<PublicLayoutWrapper />}>
@@ -87,7 +87,7 @@ function App() {
         {/* Fallback to Home */}
         <Route path="*" element={<HomePage />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 
