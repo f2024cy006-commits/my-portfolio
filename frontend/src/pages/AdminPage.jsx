@@ -9,7 +9,11 @@ import { logout } from '../features/auth/authSlice'
 import authService from '../features/auth/authService'
 import { fetchPortfolio, updatePortfolio, resetPortfolioState } from '../features/portfolio/portfolioSlice'
 
+const API_URL = `${import.meta.env.VITE_API_URL}/api`
+
 // ─── Helpers ────────────────────────────────────────────────────────────────
+
+
 
 function SaveBar({ isSaving, isError, message, onSave }) {
   return (
@@ -359,7 +363,7 @@ function ContactMessagesViewer() {
       try {
         setIsLoading(true)
         setError(null)
-        const response = await axios.get('/api/contact', {
+        const response = await axios.get(`${API_URL}/contact`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         setMessages(response.data.data || [])
