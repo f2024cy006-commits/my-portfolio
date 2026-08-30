@@ -6,29 +6,9 @@ dotenv.config()
 
 const app = express()
 
-const allowedOrigins = [
-  process.env.CLIENT_URL,
-  process.env.CLIENT_URL_2,
-  process.env.CLIENT_URL_3,
-  'https://www.maarijurrehman.dev',
-  'https://maarijurrehman.dev',
-  'https://my-portfolio-smoky-iota-fd2kvkh8k4.vercel.app',
-  'http://localhost:5173',
-  'http://127.0.0.1:5173',
-  'http://172.30.240.1:5173',
-  'http://localhost:3000',
-  'http://127.0.0.1:3000',
-].filter(Boolean)
-
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true)
-      }
-
-      callback(new Error(`CORS not allowed for origin: ${origin}`))
-    },
+    origin: process.env.CLIENT_URL || 'http://localhost:5173',
     credentials: true,
   }),
 )
