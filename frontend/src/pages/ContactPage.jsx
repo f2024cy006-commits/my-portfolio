@@ -9,39 +9,91 @@ const API_URL = `${import.meta.env.VITE_API_URL}/api`
 
 function ContactPage() {
   const { data } = useSelector((state) => state.portfolio)
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' })
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  })
+
   const [copiedField, setCopiedField] = useState(null)
-  const [submitStatus, setSubmitStatus] = useState(null) // null, 'sending', 'success', 'error'
+
+  // null, 'sending', 'success', 'error'
+  const [submitStatus, setSubmitStatus] = useState(null)
 
   if (!data) return null
 
   const { contact } = data
 
-  const handleCopy = (text, field) => {
-    navigator.clipboard.writeText(text)
-    setCopiedField(field)
-    setTimeout(() => setCopiedField(null), 2000)
+  // Copy email / phone
+  const handleCopy = async (text, field) => {
+    try {
+      await navigator.clipboard.writeText(text)
+
+      setCopiedField(field)
+
+      setTimeout(() => {
+        setCopiedField(null)
+      }, 2000)
+    } catch (error) {
+      console.error('Failed to copy:', error)
+    }
   }
 
+  // Handle contact form submission
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!formData.name || !formData.email || !formData.message) return
 
+    // Prevent empty submission
+    if (
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.message.trim()
+    ) {
+      return
+    }
+
+    // Show sending state
     setSubmitStatus('sending')
 
     try {
-      await axios.post(`${API_URL}/contact`, {
-        name: formData.name,
-        email: formData.email,
-        message: formData.message,
+      const response = await axios.post(`${API_URL}/contact`, {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        message: formData.message.trim(),
       })
 
+      console.log('Message submitted successfully:', response.data)
+
+      // Clear form after successful submission
+      setFormData({
+        name: '',
+        email: '',
+        message: '',
+      })
+
+      // Show success state
       setSubmitStatus('success')
-      setFormData({ name: '', email: '', message: '' })
-      setTimeout(() => setSubmitStatus(null), 4000)
+
+      // Hide success message after 5 seconds
+      setTimeout(() => {
+        setSubmitStatus(null)
+      }, 5000)
     } catch (error) {
+      console.error('Contact form submission failed:', error)
+
+      if (error.response) {
+        console.error('Server response:', error.response.data)
+        console.error('Status:', error.response.status)
+      }
+
+      // Show error state
       setSubmitStatus('error')
-      setTimeout(() => setSubmitStatus(null), 4000)
+
+      // Hide error message after 5 seconds
+      setTimeout(() => {
+        setSubmitStatus(null)
+      }, 5000)
     }
   }
 
@@ -49,61 +101,106 @@ function ContactPage() {
     <div className="contact-page-container">
       <div className="section-intro">
         <span className="eyebrow-accent">Get In Touch</span>
-        <h1 className="page-title">Let&apos;s build secure systems together.</h1>
+
+        <h1 className="page-title">
+          Let&apos;s build secure systems together.
+        </h1>
+
         <p className="page-desc">
-          Feel free to reach out for frontend opportunities, cybersecurity collaboration, or general inquiries.
+          Feel free to reach out for frontend opportunities, cybersecurity
+          collaboration, or general inquiries.
         </p>
       </div>
 
       <div className="contact-interactive-layout">
+
         {/* Contact Info Cards */}
         <div className="contact-details-panel">
           <h3 className="panel-subtitle">Direct Channels</h3>
+
           <div className="direct-channels-list">
-            
+
+            {/* Email */}
             {contact?.email && (
               <div className="channel-interactive-card">
                 <div className="channel-info">
                   <span className="channel-icon">
                     <MdMail size={20} />
                   </span>
+
                   <div>
-                    <span className="channel-label">Email Address</span>
-                    <a href={`mailto:${contact.email}`} className="channel-value-link">{contact.email}</a>
+                    <span className="channel-label">
+                      Email Address
+                    </span>
+
+                    <a
+                      href={`mailto:${contact.email}`}
+                      className="channel-value-link"
+                    >
+                      {contact.email}
+                    </a>
                   </div>
                 </div>
+
                 <button
-                  className={`btn-copy-clipboard ${copiedField === 'email' ? 'success' : ''}`}
+                  type="button"
+                  className={`btn-copy-clipboard ${
+                    copiedField === 'email' ? 'success' : ''
+                  }`}
                   onClick={() => handleCopy(contact.email, 'email')}
                 >
-                  {copiedField === 'email' ? '✓ Copied' : 'Copy'}
+                  {copiedField === 'email'
+                    ? '✓ Copied'
+                    : 'Copy'}
                 </button>
               </div>
             )}
 
+            {/* Phone */}
             {contact?.phone && (
               <div className="channel-interactive-card">
                 <div className="channel-info">
                   <span className="channel-icon">
                     <MdPhone size={20} />
                   </span>
+
                   <div>
-                    <span className="channel-label">Phone Line</span>
-                    <a href={`tel:${contact.phone.replace(/\s/g, '')}`} className="channel-value-link">{contact.phone}</a>
+                    <span className="channel-label">
+                      Phone Line
+                    </span>
+
+                    <a
+                      href={`tel:${contact.phone.replace(/\s/g, '')}`}
+                      className="channel-value-link"
+                    >
+                      {contact.phone}
+                    </a>
                   </div>
                 </div>
+
                 <button
-                  className={`btn-copy-clipboard ${copiedField === 'phone' ? 'success' : ''}`}
+                  type="button"
+                  className={`btn-copy-clipboard ${
+                    copiedField === 'phone' ? 'success' : ''
+                  }`}
                   onClick={() => handleCopy(contact.phone, 'phone')}
                 >
-                  {copiedField === 'phone' ? '✓ Copied' : 'Copy'}
+                  {copiedField === 'phone'
+                    ? '✓ Copied'
+                    : 'Copy'}
                 </button>
               </div>
             )}
           </div>
 
-          <h3 className="panel-subtitle label-margin">Professional Profiles</h3>
+          {/* Professional Profiles */}
+          <h3 className="panel-subtitle label-margin">
+            Professional Profiles
+          </h3>
+
           <div className="profile-action-links">
+
+            {/* LinkedIn */}
             {contact?.linkedin && (
               <a
                 href={contact.linkedin}
@@ -114,11 +211,18 @@ function ContactPage() {
                 <span className="tile-icon">
                   <RiLinkedinFill size={24} />
                 </span>
-                <span className="tile-title">LinkedIn</span>
-                <span className="tile-sub">Connect with me</span>
+
+                <span className="tile-title">
+                  LinkedIn
+                </span>
+
+                <span className="tile-sub">
+                  Connect with me
+                </span>
               </a>
             )}
 
+            {/* GitHub */}
             {contact?.github && (
               <a
                 href={contact.github}
@@ -129,8 +233,14 @@ function ContactPage() {
                 <span className="tile-icon">
                   <RiGithubFill size={24} />
                 </span>
-                <span className="tile-title">GitHub</span>
-                <span className="tile-sub">View repositories</span>
+
+                <span className="tile-title">
+                  GitHub
+                </span>
+
+                <span className="tile-sub">
+                  View repositories
+                </span>
               </a>
             )}
           </div>
@@ -138,63 +248,122 @@ function ContactPage() {
 
         {/* Contact Form */}
         <div className="contact-form-panel">
-          <h3 className="panel-subtitle">Drop a Message</h3>
-          <form onSubmit={handleSubmit} className="modern-contact-form">
+          <h3 className="panel-subtitle">
+            Drop a Message
+          </h3>
+
+          <form
+            onSubmit={handleSubmit}
+            className="modern-contact-form"
+          >
+
+            {/* Name */}
             <div className="form-group-modern">
-              <label htmlFor="name">Your Name</label>
+              <label htmlFor="name">
+                Your Name
+              </label>
+
               <input
                 id="name"
                 type="text"
                 required
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    name: e.target.value,
+                  })
+                }
                 placeholder="John Doe"
+                disabled={submitStatus === 'sending'}
               />
             </div>
 
+            {/* Email */}
             <div className="form-group-modern">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="email">
+                Email Address
+              </label>
+
               <input
                 id="email"
                 type="email"
                 required
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    email: e.target.value,
+                  })
+                }
                 placeholder="john@example.com"
+                disabled={submitStatus === 'sending'}
               />
             </div>
 
+            {/* Message */}
             <div className="form-group-modern">
-              <label htmlFor="message">Message</label>
+              <label htmlFor="message">
+                Message
+              </label>
+
               <textarea
                 id="message"
                 required
                 rows={5}
                 value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    message: e.target.value,
+                  })
+                }
                 placeholder="Let's collaborate on..."
+                disabled={submitStatus === 'sending'}
               />
             </div>
 
+            {/* Success Message */}
             {submitStatus === 'success' && (
-              <div className="form-submit-notification success">
-                ✓ Thank you! Your message was sent successfully.
+              <div
+                className="form-submit-notification success"
+                role="alert"
+              >
+                ✓ Message sent successfully! Thank you for reaching out.
               </div>
             )}
 
+            {/* Error Message */}
             {submitStatus === 'error' && (
-              <div className="form-submit-notification error">
-                <BiSolidErrorCircle size={18} style={{ display: 'inline-block', marginRight: '8px' }} />
-                Unable to send your message right now. Please try again.
+              <div
+                className="form-submit-notification error"
+                role="alert"
+              >
+                <BiSolidErrorCircle
+                  size={18}
+                  style={{
+                    display: 'inline-block',
+                    marginRight: '8px',
+                    verticalAlign: 'middle',
+                  }}
+                />
+
+                Unable to send your message right now.
+                Please try again.
               </div>
             )}
 
+            {/* Submit Button */}
             <button
               type="submit"
               className="btn-modern primary-btn form-submit-btn"
               disabled={submitStatus === 'sending'}
             >
-              {submitStatus === 'sending' ? 'Sending Message...' : 'Send Message'}
+              {submitStatus === 'sending'
+                ? 'Sending Message...'
+                : submitStatus === 'success'
+                  ? '✓ Message Sent'
+                  : 'Send Message'}
             </button>
           </form>
         </div>
@@ -204,4 +373,3 @@ function ContactPage() {
 }
 
 export default ContactPage
-
