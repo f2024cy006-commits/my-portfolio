@@ -4,8 +4,9 @@ import { BiSolidErrorCircle } from 'react-icons/bi'
 import { MdMail, MdPhone } from 'react-icons/md'
 import { RiLinkedinFill, RiGithubFill } from 'react-icons/ri'
 import axios from 'axios'
+import LiveMotionStrip from '../components/LiveMotionStrip'
 
-const API_URL = `${import.meta.env.VITE_API_URL}/api`
+const API_URL = import.meta.env.DEV ? '/api' : `${import.meta.env.VITE_API_URL}/api`
 
 function ContactPage() {
   const { data } = useSelector((state) => state.portfolio)
@@ -100,17 +101,18 @@ function ContactPage() {
   return (
     <div className="contact-page-container">
       <div className="section-intro">
-        <span className="eyebrow-accent">Get In Touch</span>
+        <span className="eyebrow-accent">Say hello</span>
 
         <h1 className="page-title">
-          Let&apos;s build secure systems together.
+          Have a good idea? Let&apos;s talk.
         </h1>
 
         <p className="page-desc">
-          Feel free to reach out for frontend opportunities, cybersecurity
-          collaboration, or general inquiries.
+          Whether you have a project in mind, a thoughtful question, or simply want to compare notes, my inbox is open.
         </p>
       </div>
+
+      <LiveMotionStrip items={['Start a conversation', 'Share an idea', 'Make something useful']} tone="emerald" />
 
       <div className="contact-interactive-layout">
 

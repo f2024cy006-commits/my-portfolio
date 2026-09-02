@@ -20,9 +20,7 @@ function Layout({ children }) {
       <header className="navbar-container">
         <div className="navbar-content">
           <Link to="/" className="nav-brand">
-            <span className="brand-accent">&lt;</span>
             {name}
-            <span className="brand-accent"> /&gt;</span>
           </Link>
           <nav className="nav-links" aria-label="Main navigation">
             {navItems.map((item) => (
@@ -38,7 +36,7 @@ function Layout({ children }) {
           </nav>
           {isAuthenticated && (
             <div className="navbar-actions">
-              <Link to="/admin" className="admin-trigger" title="Admin dashboard">
+              <Link to="/admin" className="admin-trigger" title="Open editor">
                 <span className="trigger-icon">⚙</span>
               </Link>
             </div>
@@ -54,10 +52,10 @@ function Layout({ children }) {
 
       <footer className="footer-container">
         <div className="footer-content">
-          <p>© {new Date().getFullYear()} {name}. Built with security and modern aesthetics.</p>
+          <p>© {new Date().getFullYear()} {name}. Thoughtful work for the web.</p>
           {isAuthenticated && (
             <div className="footer-links">
-              <Link to="/admin" className="footer-admin-link">Admin Dashboard</Link>
+              <Link to="/admin" className="footer-admin-link">Open editor</Link>
             </div>
           )}
         </div>

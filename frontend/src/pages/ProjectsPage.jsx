@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
+import LiveMotionStrip from '../components/LiveMotionStrip'
 
 function ProjectsPage() {
   const { data } = useSelector((state) => state.portfolio)
@@ -65,12 +66,14 @@ function ProjectsPage() {
   return (
     <div className="projects-page-container">
       <div className="section-intro">
-        <span className="eyebrow-accent">Portfolio Work</span>
-        <h1 className="page-title">Projects built with security and usability.</h1>
+        <span className="eyebrow-accent">Selected work</span>
+        <h1 className="page-title">A few things I&apos;ve made.</h1>
         <p className="page-desc">
-          Explore a curated selection of full-stack applications, encrypted database implementations, and system-level applications. Use the filters below to sort by categories.
+          A mix of useful interfaces, careful engineering, and experiments that became real products. Browse by craft or curiosity.
         </p>
       </div>
+
+      <LiveMotionStrip items={['Selected work', 'Useful ideas', 'Careful details', 'Built to last']} tone="violet" />
 
       {/* Filter Tabs */}
       <div className="filter-tabs-container">
@@ -104,11 +107,11 @@ function ProjectsPage() {
                     rel="noreferrer"
                     className="project-action-link"
                   >
-                    View Project Code <span className="arrow-icon">↗</span>
+                    See the project <span className="arrow-icon">↗</span>
                   </a>
                 ) : (
                   <span className="project-action-link-disabled">
-                    Internal Repository
+                    Details coming soon
                   </span>
                 )}
               </div>

@@ -9,7 +9,7 @@ import { logout } from '../features/auth/authSlice'
 import authService from '../features/auth/authService'
 import { fetchPortfolio, updatePortfolio, resetPortfolioState } from '../features/portfolio/portfolioSlice'
 
-const API_URL = `${import.meta.env.VITE_API_URL}/api`
+const API_URL = import.meta.env.DEV ? '/api' : `${import.meta.env.VITE_API_URL}/api`
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -627,7 +627,7 @@ function AdminPage() {
       <header className="admin-topbar">
         <div className="admin-brand">
           <Link to="/" className="admin-logo-link">← Portfolio</Link>
-          <span className="admin-title">Admin Dashboard</span>
+          <span className="admin-title">Portfolio editor</span>
         </div>
         <button className="btn-logout" onClick={handleLogout}>Logout</button>
       </header>
@@ -635,7 +635,7 @@ function AdminPage() {
       <div className="admin-layout">
         {/* Sidebar */}
         <aside className="admin-sidebar">
-          <p className="sidebar-label">Sections</p>
+          <p className="sidebar-label">Edit your site</p>
           <nav>
             {TABS.map((tab) => {
               const IconComponent = tab.icon
@@ -678,7 +678,7 @@ function AdminPage() {
               })()}
             </div>
             <a href="/" target="_blank" rel="noreferrer" className="preview-link">
-              Preview live site →
+              View live site →
             </a>
           </div>
 

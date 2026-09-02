@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux'
+import LiveMotionStrip from '../components/LiveMotionStrip'
 
 function ExperiencePage() {
   const { data } = useSelector((state) => state.portfolio)
@@ -13,9 +14,11 @@ function ExperiencePage() {
         <span className="eyebrow-accent">Professional Path</span>
         <h1 className="page-title">Work Experience</h1>
         <p className="page-desc">
-          Professional timeline representing software engineering roles, full-stack design work, and project accomplishments.
+          The places, people, and projects that have shaped how I build.
         </p>
       </div>
+
+      <LiveMotionStrip items={['Learn', 'Collaborate', 'Ship', 'Grow']} tone="emerald" />
 
       <div className="timeline-modern-wrapper">
         <div className="timeline-center-line"></div>

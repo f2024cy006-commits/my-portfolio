@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { HashRouter, Routes, Route, Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { BiSolidError } from 'react-icons/bi'
 import { fetchPortfolio } from './features/portfolio/portfolioSlice'
 import './App.css'
 
@@ -29,7 +30,7 @@ function PublicLayoutWrapper() {
     return (
       <div className="loading-screen">
         <div className="loading-spinner" />
-        <p className="loading-text">Synchronizing portfolio matrix...</p>
+        <p className="loading-text">Gathering the latest work...</p>
       </div>
     )
   }
@@ -40,11 +41,11 @@ function PublicLayoutWrapper() {
         <div className="error-shield">
           <BiSolidError size={48} />
         </div>
-        <h2>Connection Timeout</h2>
+        <h2>Portfolio unavailable</h2>
         <p>{message}</p>
-        <p className="muted">Please verify the backend microservice is active (default: port 5002, or next available port).</p>
+        <p className="muted">The portfolio service is taking a moment to respond.</p>
         <button onClick={() => dispatch(fetchPortfolio())} className="btn-modern primary-btn error-retry-btn">
-          Retry Sync
+          Try again
         </button>
       </div>
     )

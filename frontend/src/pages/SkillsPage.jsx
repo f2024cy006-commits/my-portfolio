@@ -54,11 +54,18 @@ function SkillsPage() {
   return (
     <div className="skills-page-container">
       <div className="section-intro">
-        <span className="eyebrow-accent">Technical Matrix</span>
-        <h1 className="page-title">Skills & Capabilities</h1>
+        <span className="eyebrow-accent">How I work</span>
+        <h1 className="page-title">Tools I reach for.</h1>
         <p className="page-desc">
-          Structured capabilities combining deep engineering knowledge in secure application development, modern frontend rendering, and collaborative tooling.
+          The technologies are only part of the story. I care about clear interfaces, resilient systems, and leaving a codebase easier to live with.
         </p>
+      </div>
+
+      <div className="skills-marquee" aria-hidden="true">
+        <div className="skills-marquee-track">
+          <span>Security</span><i>✦</i><span>Frontend</span><i>✦</i><span>Backend</span><i>✦</i><span>Systems</span><i>✦</i>
+          <span>Security</span><i>✦</i><span>Frontend</span><i>✦</i><span>Backend</span><i>✦</i><span>Systems</span><i>✦</i>
+        </div>
       </div>
 
       <div className="skills-categorized-grid">
@@ -69,13 +76,20 @@ function SkillsPage() {
 
           return (
             <div key={cat} className={`skills-category-card border-${meta.color}`}>
+              <div className="skills-live-constellation" aria-hidden="true">
+                <span className="constellation-line line-one"></span>
+                <span className="constellation-line line-two"></span>
+                <span className="constellation-star star-one">✦</span>
+                <span className="constellation-star star-two">✦</span>
+                <span className="constellation-star star-three">✦</span>
+              </div>
               <div className="skills-cat-header">
                 <span className="skills-cat-icon">{meta.icon}</span>
                 <h3 className="skills-cat-title">{cat}</h3>
               </div>
               <div className="skills-cat-body">
                 {items.map((skill, index) => (
-                  <div key={index} className="skill-interactive-pill">
+                  <div key={index} className={`skill-interactive-pill skill-flow-${index % 4}`}>
                     <span className="skill-pill-bullet"></span>
                     <span className="skill-pill-text">{skill}</span>
                   </div>

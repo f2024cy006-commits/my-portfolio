@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import { MdSchool } from 'react-icons/md'
+import LiveMotionStrip from '../components/LiveMotionStrip'
 
 function EducationPage() {
   const { data } = useSelector((state) => state.portfolio)
@@ -17,6 +18,8 @@ function EducationPage() {
           Structured background in Computer Networks, Cryptography, Database Systems, and Cybersecurity.
         </p>
       </div>
+
+      <LiveMotionStrip items={['Curiosity', 'Practice', 'Progress', 'Perspective']} tone="cyan" />
 
       <div className="education-modern-list">
         {education?.map((edu, index) => (

@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import LiveMotionStrip from '../components/LiveMotionStrip'
 
 function HomePage() {
   const { data } = useSelector((state) => state.portfolio)
@@ -16,7 +17,7 @@ function HomePage() {
             <span className="eyebrow-badge">{about.eyebrow}</span>
             {about.availableForWork && (
               <span className="status-indicator">
-                <span className="pulse-dot"></span> Available for Work
+                <span className="pulse-dot"></span> Open to good work
               </span>
             )}
           </div>
@@ -32,14 +33,12 @@ function HomePage() {
           </div>
         </div>
 
-        <div className="hero-visual-card">
-          <div className="terminal-header">
-            <span className="terminal-dot red"></span>
-            <span className="terminal-dot yellow"></span>
-            <span className="terminal-dot green"></span>
-            <span className="terminal-title">profile.json</span>
+        <div className="hero-visual-card profile-summary-card">
+          <div className="profile-card-header">
+            <span className="profile-card-kicker">A little about me</span>
+            <span className="profile-card-mark">✦</span>
           </div>
-          <div className="terminal-body">
+          <div className="profile-summary-body">
             <div className="terminal-profile-header">
               <div className="terminal-avatar">{about.avatarInitials}</div>
               <div className="terminal-user-info">
@@ -47,22 +46,21 @@ function HomePage() {
                 <span className="terminal-role">{about.subRole}</span>
               </div>
             </div>
-            <div className="terminal-code-block">
-              <p className="code-line"><span className="code-key">"focusAreas"</span>: [</p>
+            <div className="profile-focus-list">
+              <p className="profile-focus-label">Currently exploring</p>
               {about.taglines?.map((tagline, i) => (
-                <p key={i} className="code-line indent">
-                  <span className="code-value">"{tagline}"</span>
-                  {i < about.taglines.length - 1 ? ',' : ''}
-                </p>
+                <div key={i} className="profile-focus-item">
+                  <span className="focus-check">+</span>
+                  <span>{tagline}</span>
+                </div>
               ))}
-              <p className="code-line">],</p>
-              <p className="code-line">
-                <span className="code-key">"status"</span>: <span className="code-value">"active"</span>
-              </p>
+              <p className="profile-status"><span className="pulse-dot"></span> Making useful things</p>
             </div>
           </div>
         </div>
       </section>
+
+      <LiveMotionStrip items={['Design', 'Build', 'Secure', 'Refine']} tone="cyan" />
 
       {/* Stats Section */}
       <section className="stats-dashboard">
