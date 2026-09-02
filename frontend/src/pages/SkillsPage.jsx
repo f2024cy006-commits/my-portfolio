@@ -1,4 +1,6 @@
 import { useSelector } from 'react-redux'
+import { FaLaptopCode, FaServer, FaTools } from 'react-icons/fa'
+import { MdSecurity } from 'react-icons/md'
 
 function SkillsPage() {
   const { data } = useSelector((state) => state.portfolio)
@@ -43,12 +45,11 @@ function SkillsPage() {
     }
   })
 
-  // Icons or symbols for categories
   const categoryMeta = {
-    'Security & Encryption': { icon: '🛡️', color: 'emerald' },
-    'Frontend Development': { icon: '💻', color: 'violet' },
-    'Backend & Systems': { icon: '⚙️', color: 'blue' },
-    'Dev Tools & Methods': { icon: '🔧', color: 'cyan' },
+    'Security & Encryption': { icon: MdSecurity, color: 'emerald' },
+    'Frontend Development': { icon: FaLaptopCode, color: 'violet' },
+    'Backend & Systems': { icon: FaServer, color: 'blue' },
+    'Dev Tools & Methods': { icon: FaTools, color: 'cyan' },
   }
 
   return (
@@ -73,6 +74,7 @@ function SkillsPage() {
           const items = categorized[cat]
           if (items.length === 0) return null
           const meta = categoryMeta[cat]
+          const IconComponent = meta.icon
 
           return (
             <div key={cat} className={`skills-category-card border-${meta.color}`}>
@@ -84,7 +86,9 @@ function SkillsPage() {
                 <span className="constellation-star star-three">✦</span>
               </div>
               <div className="skills-cat-header">
-                <span className="skills-cat-icon">{meta.icon}</span>
+                <span className="skills-cat-icon">
+                  <IconComponent aria-hidden="true" />
+                </span>
                 <h3 className="skills-cat-title">{cat}</h3>
               </div>
               <div className="skills-cat-body">
